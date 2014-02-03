@@ -61,4 +61,11 @@ public class Attraction extends Behaviour{
 			agent.setVelocity(velModifier);
 		
 	}
+
+	@Override
+	public void Update(Agent agent, Agent otherAgent, Vector2d distanceVec,
+			double distance) {
+		// TODO Auto-generated method stub
+		
+	}
 }

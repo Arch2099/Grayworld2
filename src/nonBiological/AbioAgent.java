@@ -6,8 +6,9 @@ import java.util.Random;
 
 import javax.vecmath.Vector2d;
 
+import passiveProp.Movement;
+import passiveProp.Passive;
 import behaviours.Behaviour;
-import behaviours.Movement;
 import behaviours.Swarm;
 import bioSimulation.Agent;
 import bioSimulation.Gui;
@@ -23,9 +24,9 @@ public class AbioAgent extends Agent {
 		velocity = new Vector2d(rnd.nextInt(30)-15,rnd.nextInt(30)-15);
 		
 		
-		Behaviour movement = new Movement(40,40);
+		Passive movement = new Movement(40,40);
 		Behaviour repulsion = new Repulsion();
-		behaviours.add(movement);
+	//	behaviours.add(movement);
 		behaviours.add(repulsion);
 		
 		
@@ -44,9 +45,9 @@ public class AbioAgent extends Agent {
 		velocity = new Vector2d(rnd.nextInt(30)-15,rnd.nextInt(30)-15);
 		
 		
-		Behaviour movement = new Movement(25,25);
+		Passive movement = new Movement(25,25);
 		Behaviour attraction = new Attraction();
-		behaviours.add(movement);
+		//behaviours.add(movement);
 		behaviours.add(attraction);
 		
 		

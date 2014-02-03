@@ -10,4 +10,7 @@ public abstract class Behaviour {
 	
 	public abstract void initialise(Agent agent);
 	public abstract void Update(Agent agent,ArrayList<Agent> population);
+	public abstract void Update(Agent agent, Agent otherAgent, Vector2d distanceVec, double distance);
+		
+	
 }

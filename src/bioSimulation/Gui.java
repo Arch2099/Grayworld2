@@ -48,7 +48,7 @@ import simLoop.BaseLoop;
 public class Gui extends Canvas implements KeyListener, MouseMotionListener, BaseLoop    
                                                 {
     
-    public static final int WIDTH = 600, HEIGHT = 400;   
+    public static final int WIDTH = 900, HEIGHT = 600;   
     public final static int FPS = 30;
 
     private BufferStrategy strategy;
@@ -91,11 +91,20 @@ public class Gui extends Canvas implements KeyListener, MouseMotionListener, Bas
 		menuBar.add(mnFile);
 		
 
-		JMenuItem mntmStartSimulation = new JMenuItem("Start Simulation");
+		JMenuItem mntmStartSimulation = new JMenuItem("Start/Pause Simulation");
 		mntmStartSimulation.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				   // START SIMULATION
-				pause = false;
+				//pause = false;
+				if(pause)
+				{
+					pause = false;					
+				}
+				else
+				{
+					pause = true;
+				}
+				
 			}
 		});
 		mnFile.add(mntmStartSimulation);
@@ -144,11 +153,11 @@ public class Gui extends Canvas implements KeyListener, MouseMotionListener, Bas
         
         //Lab lab = new Lab();
         // PhLab lab = new PhLab();
-        DTSCTest demo = new DTSCTest("graph",world);
-        demo.pack();
-        RefineryUtilities.centerFrameOnScreen(demo);
-        demo.setVisible(true);
-        demo.start();
+        //DTSCTest demo = new DTSCTest("graph",world);
+        //demo.pack();
+        //RefineryUtilities.centerFrameOnScreen(demo);
+       // demo.setVisible(true);
+       // demo.start();
         runner.init(this,30);
         runner.begin();
         
@@ -193,7 +202,7 @@ public class Gui extends Canvas implements KeyListener, MouseMotionListener, Bas
 		{
 			for(int j = 0; j <5; j++)
 			{
-				g.setColor(new Color(180,180,180,World.resourceQuadrant[i][j]));
+				g.setColor(new Color(180,180,180,World.resourceQuadrant[i][j]/3));
 				g.fillRect(i*WIDTH/5,j*HEIGHT/5,WIDTH/5,HEIGHT/5);
 			}
 			
@@ -214,7 +223,7 @@ public class Gui extends Canvas implements KeyListener, MouseMotionListener, Bas
 		{
 			for(int j = 0; j <5; j++)
 			{
-				g.setColor(new Color(180,180,180,World.resourceQuadrant[i][j]));
+				g.setColor(new Color(180,180,180,World.resourceQuadrant[i][j]/4));
 				g.fillRect(i*WIDTH/5,j*HEIGHT/5,WIDTH/5,HEIGHT/5);
 			}
 			

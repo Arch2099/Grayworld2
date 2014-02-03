@@ -31,11 +31,11 @@ public class Diet extends Behaviour {
 		{
 			dietType = 0;   //digest fungi, bacteria
 		}
-		if (dietGene >= 128 && dietGene < 162 )
+		if (dietGene >= 128 && dietGene < 200 )
 		{
 			dietType = 1;  // digest plants
 		}
-		if (dietGene >= 162 )
+		if (dietGene >= 200 )
 		{
 			dietType = 2;  // digest animals
 		}
@@ -56,10 +56,10 @@ public class Diet extends Behaviour {
 					thisPos.set(agent.getPosition());
 					thisPos.sub(otherAgent.getPosition());
 									
-					if ((thisPos.length() < agent.getInteractionRange() && !otherAgent.isDevoured())
+					if ((thisPos.length() < agent.getInteractionRangeSq() && !otherAgent.isDevoured())
 							&& (thisPos.length() > 0.001)) {
 						otherAgent.setDevoured(true); //gnam
-						agent.addEnergy(otherAgent.getSize()*25);
+						agent.addEnergy(otherAgent.getSize()*50 + otherAgent.getEnergy());
 						break;
 					}
 					
@@ -91,10 +91,46 @@ public class Diet extends Behaviour {
 		
 
 	}
-	
+
+	@Override
+	public void Update(Agent agent, Agent otherAgent, Vector2d distanceVec, double distanceSq) {
+		if (!agent.equals(otherAgent)) {
+		eatingVec.set(0, 0);
+		
+			
+			if (dietType==otherAgent.getKingdom() && !otherAgent.isAlive()) {
+				
+								
+				if (distanceSq < agent.getInteractionRangeSq() && !otherAgent.isDevoured()) {
+					otherAgent.setDevoured(true); //gnam
+					agent.addEnergy(otherAgent.getSize()*25);
+					
+				}
+				
+				
+					eatingVec.set(distanceVec);					
+					eatingVec.scale(attractionFactor);
+					
+					
+					velModifier.add(eatingVec);
+					velModifier.add(agent.getVelocity());
+					// System.out.println(velModifier.length());
+					velModifier.scale(agent.limitSpeed(velModifier));
+					agent.setVelocity(velModifier);
+				
+				}
+			}
+			
+		
+
+	}
 		
 		
 	}
+	
+		
+		
+	
 
 	
 

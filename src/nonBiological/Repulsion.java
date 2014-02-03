@@ -80,6 +80,13 @@ public class Repulsion extends Behaviour{
 		velModifier.scale(agent.limitSpeed(velModifier));
         agent.setVelocity(velModifier);
 	}
+
+	@Override
+	public void Update(Agent agent, Agent otherAgent, Vector2d distanceVec,
+			double distance) {
+		// TODO Auto-generated method stub
+		
+	}
 	
 	/*
 	public double limitSpeed(Vector2d vel){

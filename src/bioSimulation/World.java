@@ -45,6 +45,7 @@ public class World { //extends Panel{
 	private String adam = "";
 	private static int Hbound = Gui.HEIGHT;
 	private static int Wbound = Gui.WIDTH;
+	private static int lightPool;
 
 	private LifeFactory lifeFactory = new LifeFactory();
 
@@ -80,10 +81,10 @@ public class World { //extends Panel{
 		{			
 			//	population.add(lifeFactory.createElectron());
 		}
-		// swarm TEST
-		for(int i=0; i <200; i++)
+		 //swarm TEST
+		for(int i=0; i <300; i++)
 		{
-			//	population.add(lifeFactory.createTestAgent());
+		//		population.add(lifeFactory.createTestAgent());
 
 		}
 
@@ -97,19 +98,19 @@ public class World { //extends Panel{
 		//predator
 		dnaFEARtest2 ="1-140,44-66,1,44,55-76,25-101,101,25-89,34-101,250,65,49,34/111-111-111-111-222/1-1,56,56,22,2-2222-222-222-28,56,56,56,56,23,22-28,100,56,56,56,23,22";
 		// atoms
-		adam ="1-100,52-66,1,44,55-76,25-101,99,25-89,34-1,99,65,49,34/111-111-111-111-222/1-161,56,56,22,2-2222-222-222,99,3-28,99,56,56,56,56,23,22-70,155,60";
+		adam ="1-100,52-66,100,44,55-76,25-101,99,25-89,34-1,99,65,49,34/111-111-111-111-222/50,120,88-161,56,56,22,2-2222-222-222,99,3-28,99,56,56,57,58,23,22-70,155,60";
 
 		Random rnd = new Random();
 
 		//for(int i=0; i < 6; i++)
-		//{
-		//population.add(lifeFactory.createAgent(new Vector2d(rnd.nextInt(355),rnd.nextInt(355)), dnaFEARtest));
-		//population.add(lifeFactory.createAgent(new Vector2d(rnd.nextInt(255),rnd.nextInt(255)), dnaFEARtest));
-		//population.add(lifeFactory.createAgent(new Vector2d(rnd.nextInt(255),rnd.nextInt(455)), dnaFEARtest2));
-		//population.add(lifeFactory.createAgent(new Vector2d(rnd.nextInt(255),rnd.nextInt(455)), dnaFEARtest2));
-		//population.add(lifeFactory.createAgent(new Vector2d(rnd.nextInt(455),rnd.nextInt(255)), dnaTEST2));
-		//population.add(lifeFactory.createAgent(new Vector2d(rnd.nextInt(255),rnd.nextInt(255)), dnaTEST3));
-		//population.add(lifeFactory.createAgent(new Vector2d(rnd.nextInt(255),rnd.nextInt(255)), dnaTEST3));
+	//	{
+	//	population.add(lifeFactory.createAgent(new Vector2d(rnd.nextInt(355),rnd.nextInt(355)), dnaFEARtest));
+	//	population.add(lifeFactory.createAgent(new Vector2d(rnd.nextInt(255),rnd.nextInt(255)), dnaFEARtest));
+	//	population.add(lifeFactory.createAgent(new Vector2d(rnd.nextInt(255),rnd.nextInt(455)), dnaFEARtest2));
+	//	population.add(lifeFactory.createAgent(new Vector2d(rnd.nextInt(255),rnd.nextInt(455)), dnaFEARtest2));
+	//	population.add(lifeFactory.createAgent(new Vector2d(rnd.nextInt(455),rnd.nextInt(255)), dnaTEST2));
+	//	population.add(lifeFactory.createAgent(new Vector2d(rnd.nextInt(255),rnd.nextInt(255)), dnaTEST3));
+	//	population.add(lifeFactory.createAgent(new Vector2d(rnd.nextInt(255),rnd.nextInt(255)), dnaTEST3));
 		population.add(lifeFactory.createAgent(new Vector2d(rnd.nextInt(255),rnd.nextInt(255)), adam));
 
 
@@ -135,7 +136,7 @@ public class World { //extends Panel{
 		{
 			for(int j = 0; j <5; j++)
 			{
-				//resourceQuadrant[i][j] = rnd.nextInt(100);
+				resourceQuadrant[i][j] = rnd.nextInt(100);
 				respawnTimer[i][j] = 0;
 			}		
 		}
@@ -161,6 +162,7 @@ public class World { //extends Panel{
 
 
 	public void updateWorld() {
+		lightPool = 15;
 		for(Agent agent : population )
 		{
 			agent.Update(population);
@@ -179,7 +181,8 @@ public class World { //extends Panel{
 		for(Agent agent : breedList)
 		{
 			Agent child = lifeFactory.createAgent(agent.getPosition(),lifeFactory.HaploidCrossOver(agent.getDNA(), agent.getPartnerDNA()));
-			population.add(child);   System.out.println("population :" + population.size());
+			population.add(child);
+			//  System.out.println("population :" + population.size());
 			child.initilise();
 			agent.setMated(false);
 			agent.addEnergy(-100);
@@ -204,7 +207,7 @@ public class World { //extends Panel{
 				{
 					if(respawnTimer[i][j] > 300)
 					{
-						resourceQuadrant[i][j] = 50;
+						resourceQuadrant[i][j] = 100;
 						respawnTimer[i][j] = 0;
 					}
 					else
@@ -266,6 +269,17 @@ public class World { //extends Panel{
 
 		return foodGathered;
 
+	}
+	
+	public static int photosyntesis(int size)
+	{
+		if (lightPool >= size)
+		{
+			lightPool -= size;
+			return size;
+		}
+		else
+			return 0;
 	}
 	
 
