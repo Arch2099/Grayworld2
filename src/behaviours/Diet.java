@@ -59,7 +59,7 @@ public class Diet extends Behaviour {
 					if ((thisPos.length() < agent.getInteractionRangeSq() && !otherAgent.isDevoured())
 							&& (thisPos.length() > 0.001)) {
 						otherAgent.setDevoured(true); //gnam
-						agent.addEnergy(otherAgent.getSize()*50 + otherAgent.getEnergy());
+						agent.addEnergy(otherAgent.getSize()*25 + otherAgent.getEnergy());
 						break;
 					}
 					

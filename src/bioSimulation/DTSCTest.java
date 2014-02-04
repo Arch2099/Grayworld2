@@ -121,19 +121,5 @@ public class DTSCTest extends JDialog {
     public void start() {
         timer.start();
     }
-/*
-    public static void main(final String[] args) {
-        EventQueue.invokeLater(new Runnable() {
 
-            @Override
-            public void run() {
-                DTSCTest demo = new DTSCTest(TITLE);
-                demo.pack();
-                RefineryUtilities.centerFrameOnScreen(demo);
-                demo.setVisible(true);
-                demo.start();
-            }
-        });
-    }
-    */
 }

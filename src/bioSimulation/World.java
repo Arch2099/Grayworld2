@@ -162,7 +162,7 @@ public class World { //extends Panel{
 
 
 	public void updateWorld() {
-		lightPool = 15;
+		lightPool = 33;
 		for(Agent agent : population )
 		{
 			agent.Update(population);
@@ -207,7 +207,7 @@ public class World { //extends Panel{
 				{
 					if(respawnTimer[i][j] > 300)
 					{
-						resourceQuadrant[i][j] = 100;
+						resourceQuadrant[i][j] = 200;
 						respawnTimer[i][j] = 0;
 					}
 					else

@@ -240,7 +240,7 @@ public class LifeFactory {
 
 		// test
 
-		Agent agent = new Agent(position, cellStructure, 100, 50, 2,
+		Agent agent = new Agent(position, cellStructure, 100, 100, 2,
 				agentColor, passives, behaviours, upkeep, DNA);
 
 		// dummy genes
