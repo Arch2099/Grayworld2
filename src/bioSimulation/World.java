@@ -6,8 +6,18 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Panel;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
+
+
+
+
+
+
+
 
 
 import javax.print.attribute.standard.Compression;
@@ -17,6 +27,15 @@ import javax.vecmath.Vector2d;
 
 
 
+
+
+
+
+
+
+
+import data.Genealogy;
+import data.SpeciesOrganizer;
 import behaviours.Behaviour;
 
 public class World { //extends Panel{
@@ -48,6 +67,7 @@ public class World { //extends Panel{
 	private static int lightPool;
 
 	private LifeFactory lifeFactory = new LifeFactory();
+	private Genealogy genealogy = new Genealogy();
 
 	Random rnd = new Random();	
 
@@ -98,8 +118,8 @@ public class World { //extends Panel{
 		//predator
 		dnaFEARtest2 ="1-140,44-66,1,44,55-76,25-101,101,25-89,34-101,250,65,49,34/111-111-111-111-222/1-1,56,56,22,2-2222-222-222-28,56,56,56,56,23,22-28,100,56,56,56,23,22";
 		// atoms
-		adam ="1-100,52-66,100,44,55-76,25-101,99,25-89,34-1,99,65,49,34/111-111-111-111-222/50,120,88-161,56,56,22,2-2222-222-222,99,3-28,99,56,56,57,58,23,22-70,155,60";
-
+		//adam ="1-100,52-66,100,44,55-76,25-101,99,25-89,34-1,99,65,49,34/111-111-111-111-222/50,120,88-161,56,56,22,2-2222-222-222,99,3-28,99,56,56,57,58,23,22-70,155,60";
+		adam ="7-51,33-0,00,0,05-0,0-50,0,0-09,0-1,0,65,49,34/0-0-0-0-0/0,0,0-0,0,0,0,2-0-0-0,99,3-0,0,56,56,57,58,23,22-0,05,0";
 		Random rnd = new Random();
 
 		//for(int i=0; i < 6; i++)
@@ -111,7 +131,7 @@ public class World { //extends Panel{
 	//	population.add(lifeFactory.createAgent(new Vector2d(rnd.nextInt(455),rnd.nextInt(255)), dnaTEST2));
 	//	population.add(lifeFactory.createAgent(new Vector2d(rnd.nextInt(255),rnd.nextInt(255)), dnaTEST3));
 	//	population.add(lifeFactory.createAgent(new Vector2d(rnd.nextInt(255),rnd.nextInt(255)), dnaTEST3));
-		population.add(lifeFactory.createAgent(new Vector2d(rnd.nextInt(255),rnd.nextInt(255)), adam));
+		population.add(lifeFactory.createAgent(new Vector2d(rnd.nextInt(255),rnd.nextInt(255)), adam,"0"));
 
 
 		//}
@@ -180,8 +200,11 @@ public class World { //extends Panel{
 		// create offspring
 		for(Agent agent : breedList)
 		{
-			Agent child = lifeFactory.createAgent(agent.getPosition(),lifeFactory.HaploidCrossOver(agent.getDNA(), agent.getPartnerDNA()));
+			Agent child = lifeFactory.createAgent(agent.getPosition(),lifeFactory.HaploidCrossOver(agent.getDNA(), agent.getPartnerDNA()),agent.getAgentParent());
 			population.add(child);
+			if (child.isMutant()) {
+				genealogy.newBorn(child);
+			}
 			//  System.out.println("population :" + population.size());
 			child.initilise();
 			agent.setMated(false);
@@ -219,7 +242,21 @@ public class World { //extends Panel{
 		}
 
 	}
-
+	
+	public SpeciesOrganizer getWorldSpecies()
+	{
+		//Map<Color, Integer> speciesMap = new HashMap<Color, Integer>();
+		
+		
+		SpeciesOrganizer mySpecies = new SpeciesOrganizer();
+		
+		mySpecies.speciesData(population);
+		
+		//System.out.println(mySpecies);
+		return mySpecies;
+		
+	}
+	
 
 	public ArrayList<Agent> getPopulation() {
 		return population;
@@ -316,6 +353,18 @@ public class World { //extends Panel{
 		
 		complexity = NormalisedCompressionDistance.C(popDNA);
 		return complexity;
+	}
+
+
+
+	public Genealogy getGenealogy() {
+		return genealogy;
+	}
+
+
+
+	public void setGenealogy(Genealogy genealogy) {
+		this.genealogy = genealogy;
 	}
 
 

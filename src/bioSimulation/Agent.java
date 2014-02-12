@@ -69,11 +69,17 @@ public class Agent {
 	private int specieR;
 	private int specieG;
 	private int specieB;
+	
+	private int agentID;
+	private String agentParent;
+	
+	private String exportableData;
+	private boolean mutant;
 
 	public Agent(Vector2d initialPosition, int kingdom, int initialHealth,
 			int initialEnergy, int initialSize, Color agentColor,
 			ArrayList<Passive> passivesList,
-			ArrayList<Behaviour> behavioursList, int upkeep, String DNA) {
+			ArrayList<Behaviour> behavioursList, int upkeep, String DNA, String parent,int agentID, boolean isMutant) {
 		isAlive = true;
 		passives = passivesList;
 		behaviours = behavioursList;
@@ -82,11 +88,17 @@ public class Agent {
 		energy = initialEnergy;
 		size = initialSize;
 		color = agentColor;
-
+		agentParent = parent+ "-" +agentID;
+		
+		this.agentID = agentID;
 		this.kingdom = kingdom;
 		this.upkeep = upkeep;
 		this.DNA = DNA;
 		partnerDNA = "";
+		
+		mutant = isMutant;
+		
+		
 	}
 
 	// / constructor for tests
@@ -310,7 +322,7 @@ public class Agent {
 			}
 
 			// bounds to be fixed!
-			if (position.x < 0)
+			if (position.x <= 0)
 				position.x = Gui.WIDTH;
 
 			if (position.x > Gui.WIDTH)
@@ -320,7 +332,7 @@ public class Agent {
 				position.y = Gui.HEIGHT;
 
 			if (position.y > Gui.HEIGHT)
-				position.y = 0;
+				position.y = 5;
 		}
 		else if (deathCounter >= 3000)
 		{
@@ -344,7 +356,8 @@ public class Agent {
 		g.setColor(color);
 
 		((Graphics2D) g).setStroke(new BasicStroke(2));
-		g.drawOval((int) position.x - (size / 2),
+		
+		g.fillOval((int) position.x - (size / 2),
 				(int) position.y - (size / 2), size, size);
 		g.drawLine((int) position.x, (int) position.y,
 				(int) (position.x - velocity.x),
@@ -510,6 +523,30 @@ public class Agent {
 
 	public void setCharge(int charge) {
 		this.charge = charge;
+	}
+
+	public int getAgentID() {
+		return agentID;
+	}
+
+	public void setAgentID(int agentID) {
+		this.agentID = agentID;
+	}
+
+	public String getAgentParent() {
+		return agentParent;
+	}
+
+	public void setAgentParent(String agentParent) {
+		this.agentParent = agentParent;
+	}
+
+	public boolean isMutant() {
+		return mutant;
+	}
+
+	public void setMutant(boolean mutant) {
+		this.mutant = mutant;
 	}
 
 }

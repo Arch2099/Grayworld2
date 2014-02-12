@@ -73,7 +73,7 @@ public class Attack extends Behaviour {
 				if ((thisPos.lengthSquared() < agent.getInteractionRangeSq())
 						&& (thisPos.length() > 0.001)) {
 
-					otherAgent.takeDamage(damage);
+					otherAgent.takeDamage(2);
 					
 					break;
 				}

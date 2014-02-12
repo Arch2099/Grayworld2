@@ -1,4 +1,4 @@
-package bioSimulation;
+package data;
 
 import java.awt.BorderLayout;
 import java.awt.EventQueue;
@@ -6,11 +6,13 @@ import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Random;
+
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JDialog;
 import javax.swing.JPanel;
 import javax.swing.Timer;
+
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
@@ -21,6 +23,8 @@ import org.jfree.data.time.Second;
 import org.jfree.data.xy.XYDataset;
 import org.jfree.ui.ApplicationFrame;
 import org.jfree.ui.RefineryUtilities;
+
+import bioSimulation.World;
 
 /** @see http://stackoverflow.com/questions/5048852 */
 public class DTSCTest extends JDialog {

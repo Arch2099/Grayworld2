@@ -17,7 +17,7 @@ public class Movement extends Passive {
 	Vector2d carbVelocity = new Vector2d(0, 0);
 
 	public Movement(int cruiseSpeed, int sprintSpeed) {
-		this.cruiseSpeed = cruiseSpeed /20;
+		this.cruiseSpeed = cruiseSpeed /30;
 		this.sprintSpeed = this.cruiseSpeed + sprintSpeed / 60;
 
 	}

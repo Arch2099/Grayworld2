@@ -79,6 +79,8 @@ public class LifeFactory {
 	private int greenColor;
 	private int blueColor;
 	private Color agentColor;
+	private int IDcounter = 0;
+	private boolean mutant;
 
 	private double mutationProbability = 0.04;
 	private int cellStructure; // determinate kingdom
@@ -97,7 +99,8 @@ public class LifeFactory {
 		return agent;
 	}
 
-	public Agent createAgent(Vector2d position, String DNA) {
+	public Agent createAgent(Vector2d position, String DNA,String parent) {
+		
 		behaviours = new ArrayList<Behaviour>();
 		redColor = 0;
 		greenColor = 0;
@@ -143,9 +146,9 @@ public class LifeFactory {
 			if (myDiet < 86) {
 				blueColor += 64;
 			} else if (myDiet > 172) {
-				greenColor += 64;
-			} else {
 				redColor += 64;
+			} else {
+				greenColor += 64;
 			}
 			
 			upkeep += 5;
@@ -238,11 +241,15 @@ public class LifeFactory {
 		
 		
 
-		// test
-
+		IDcounter++;
+		
 		Agent agent = new Agent(position, cellStructure, 100, 100, 2,
-				agentColor, passives, behaviours, upkeep, DNA);
-
+				agentColor, passives, behaviours, upkeep, DNA,parent,IDcounter,mutant);
+		
+		if(mutant == true)
+		{
+			System.out.println(" new mutant");
+		}
 		// dummy genes
 
 		return agent;
@@ -288,6 +295,7 @@ public class LifeFactory {
 	}
 
 	public String HaploidCrossOver(String DNA1, String DNA2) {
+		mutant = false;
 		String childDNA = "";
 
 		// deconstruct first parent DNA
@@ -360,6 +368,7 @@ public class LifeFactory {
 	}
 
 	public String mutate(String geneToMutate) {
+		
 		Random rnd = new Random();
 		String geneM = "";
 		String[] exonToMutate = geneToMutate.split(intraGeneDelimiter); // separate
@@ -399,6 +408,7 @@ public class LifeFactory {
 				exonMVal = Integer.parseInt(exonM, 2); // transform the binary
 														// value in int
 				geneM += exonMVal + intraGeneDelimiter; // rebuild the gene
+				mutant= true;
 				// System.out.println("mutation!");
 			} else {
 				geneM += exonM + intraGeneDelimiter;

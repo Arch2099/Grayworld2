@@ -23,6 +23,7 @@ import java.awt.image.BufferStrategy;
 
 
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -40,8 +41,12 @@ import javax.vecmath.Vector2d;
 import org.jfree.ui.RefineryUtilities;
 
 
-import nonBiological.PhLab;
 
+
+
+import data.AreaChartTest;
+import data.SpeciesOrganizer;
+import nonBiological.PhLab;
 import simLoop.BaseLoop;
 
 
@@ -62,6 +67,10 @@ public class Gui extends Canvas implements KeyListener, MouseMotionListener, Bas
 	private final Action action3 = new SwingAction3();
 	private final ButtonGroup buttonGroup_2 = new ButtonGroup();
     private final static World world = new World();
+    //private SpeciesOrganizer speciesOrganizer= new SpeciesOrganizer();
+    AreaChartTest demo;
+    
+   private int counterz;
     
     
 
@@ -98,11 +107,13 @@ public class Gui extends Canvas implements KeyListener, MouseMotionListener, Bas
 				//pause = false;
 				if(pause)
 				{
-					pause = false;					
+					pause = false;
+					
 				}
 				else
 				{
 					pause = true;
+					//speciesOrganizer.speciesData(world.getPopulation());
 				}
 				
 			}
@@ -113,6 +124,18 @@ public class Gui extends Canvas implements KeyListener, MouseMotionListener, Bas
 		mnFile.add(mntmLoad);
 		
 		JMenuItem mntmSave = new JMenuItem("Save");
+		mntmSave.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				   try {
+					   pause = true;
+					world.getGenealogy().saveGenealogy();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		}
+		);
 		mnFile.add(mntmSave);
 		
 		JMenuItem mntmExit = new JMenuItem("Exit");
@@ -153,11 +176,11 @@ public class Gui extends Canvas implements KeyListener, MouseMotionListener, Bas
         
         //Lab lab = new Lab();
         // PhLab lab = new PhLab();
-        //DTSCTest demo = new DTSCTest("graph",world);
-        //demo.pack();
-        //RefineryUtilities.centerFrameOnScreen(demo);
-       // demo.setVisible(true);
-       // demo.start();
+        demo = new AreaChartTest("graph",world);
+        demo.pack();
+        RefineryUtilities.centerFrameOnScreen(demo);
+        demo.setVisible(true);
+        //demo.start();
         runner.init(this,30);
         runner.begin();
         
@@ -169,7 +192,14 @@ public class Gui extends Canvas implements KeyListener, MouseMotionListener, Bas
     
     public void updateWorld(){
         if(!pause){
-           world.updateWorld();
+           world.updateWorld(); 
+         /*  if(counterz >30)
+           {
+        	   demo.updateChart(world);
+        	   counterz = 0;
+           }
+           else
+        	   counterz++; */
             }
     
            
