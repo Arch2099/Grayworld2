@@ -65,17 +65,22 @@ public class World { //extends Panel{
 	private static int Hbound = Gui.HEIGHT;
 	private static int Wbound = Gui.WIDTH;
 	private static int lightPool;
+	public String oldPop = "";
 
-	private LifeFactory lifeFactory = new LifeFactory();
+	private LifeFactory lifeFactory;
 	private Genealogy genealogy = new Genealogy();
+	Random rnd;
+	private int day = 0;
 
-	Random rnd = new Random();	
-
-
-
-	public World(){
+	
 
 
+
+	public World(long seed){
+		System.out.println("seed:" + seed);
+		
+		rnd = new Random(seed);
+		lifeFactory = new LifeFactory(rnd);
 		/*
 		JFrame frame = new JFrame("World");
         JPanel panel = (JPanel)frame.getContentPane();
@@ -119,8 +124,9 @@ public class World { //extends Panel{
 		dnaFEARtest2 ="1-140,44-66,1,44,55-76,25-101,101,25-89,34-101,250,65,49,34/111-111-111-111-222/1-1,56,56,22,2-2222-222-222-28,56,56,56,56,23,22-28,100,56,56,56,23,22";
 		// atoms
 		//adam ="1-100,52-66,100,44,55-76,25-101,99,25-89,34-1,99,65,49,34/111-111-111-111-222/50,120,88-161,56,56,22,2-2222-222-222,99,3-28,99,56,56,57,58,23,22-70,155,60";
-		adam ="7-51,33-0,00,0,05-0,0-50,0,0-09,0-1,0,65,49,34/0-0-0-0-0/0,0,0-0,0,0,0,2-0-0-0,99,3-0,0,56,56,57,58,23,22-0,05,0";
-		Random rnd = new Random();
+		//adam ="7-51,33-0,00,0,05-0,0-50,0,0-09,0-1,0,65,49,34/0-0-0-0-0/0,0,0-0,0,0,0,2-0-0-0,99,3-0,0,56,56,57,58,23,22-0,05,0";
+		  adam ="7-51:33-0:00:0:05-0:0-50:0:0-09:0-1:0:65:49:34/0-0-0-0-0/0:0:0-0:0:0:0:2-0-0-0:99:3-0:0:56:56:57:58:23:22-0:05:0";
+		//Random rnd = new Random();
 
 		//for(int i=0; i < 6; i++)
 	//	{
@@ -131,7 +137,10 @@ public class World { //extends Panel{
 	//	population.add(lifeFactory.createAgent(new Vector2d(rnd.nextInt(455),rnd.nextInt(255)), dnaTEST2));
 	//	population.add(lifeFactory.createAgent(new Vector2d(rnd.nextInt(255),rnd.nextInt(255)), dnaTEST3));
 	//	population.add(lifeFactory.createAgent(new Vector2d(rnd.nextInt(255),rnd.nextInt(255)), dnaTEST3));
-		population.add(lifeFactory.createAgent(new Vector2d(rnd.nextInt(255),rnd.nextInt(255)), adam,"0"));
+		
+		
+	//	population.add(lifeFactory.createAgent(new Vector2d(rnd.nextInt(255),rnd.nextInt(255)), adam,"0"));
+		population.add(lifeFactory.createAgent(1,new Vector2d(400,300), adam,"1"));
 
 
 		//}
@@ -175,13 +184,14 @@ public class World { //extends Panel{
 		System.out.println("kolm comp " + NormalisedCompressionDistance.ncd(adam,adam));
 		System.out.println("kolm comp " + NormalisedCompressionDistance.ncd(dnaFEARtest,dnaFEARtest2));
 		
-		System.out.println(lifeFactory.mutate("0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0"));
+		//System.out.println(lifeFactory.mutate("0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0"));
 		System.out.println("NCD : " + NormalisedCompressionDistance.ncd("0445435435543","lkaelfkjlsfjdlkfjsdfjsakfadfjadfdas;'f;'sf."));
 
 	}
 
 
 	public void updateWorld() {
+		day++;
 		lightPool = 33;
 		for(Agent agent : population )
 		{
@@ -200,11 +210,17 @@ public class World { //extends Panel{
 		// create offspring
 		for(Agent agent : breedList)
 		{
-			Agent child = lifeFactory.createAgent(agent.getPosition(),lifeFactory.HaploidCrossOver(agent.getDNA(), agent.getPartnerDNA()),agent.getAgentParent());
+			Agent child = lifeFactory.createAgent(day,agent.getPosition(),lifeFactory.HaploidCrossOver(agent.getDNA(), agent.getPartnerDNA()),agent.getAgentParent());
 			population.add(child);
-			if (child.isMutant()) {
-				genealogy.newBorn(child);
+			
+			if (!agent.getColor().equals(child.getColor()))
+			{
+							child.setAgentParent(""+child.getAgentID());
+							System.out.println("agent color" + agent.getColor() + " chield col " +
+							child.getColor());
+							
 			}
+			genealogy.newBorn(child,agent);
 			//  System.out.println("population :" + population.size());
 			child.initilise();
 			agent.setMated(false);
@@ -343,15 +359,16 @@ public class World { //extends Panel{
 		Wbound += wbound;
 	}
 
-	public int getPopulationComplexity(){
+	public double getPopulationComplexity(){
 		String popDNA= "";
-		int complexity;
+		double complexity;
 		for(Agent agent : population )
 		{
-			popDNA += agent.getDNA();
+			popDNA += agent.getColor() + "\n";
 		}
 		
-		complexity = NormalisedCompressionDistance.C(popDNA);
+		complexity = (NormalisedCompressionDistance.ncd(oldPop,popDNA)); //population.size());
+		oldPop=popDNA;
 		return complexity;
 	}
 
@@ -365,6 +382,18 @@ public class World { //extends Panel{
 
 	public void setGenealogy(Genealogy genealogy) {
 		this.genealogy = genealogy;
+	}
+
+
+
+	public int getDay() {
+		return day;
+	}
+
+
+
+	public void setDay(int day) {
+		this.day = day;
 	}
 
 

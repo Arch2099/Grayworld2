@@ -32,17 +32,17 @@ public class DTSCTest extends JDialog {
     private static final String TITLE = "Kolm Test";
     private static final String START = "Start";
     private static final String STOP = "Stop";
-    private static final float MINMAX = 1000;
+    private static final float MINMAX = 3;
     private static final int COUNT = 100; // 2*60
     private static final int FAST = 1000;
     private static final int SLOW = FAST * 5;
     private static final Random random = new Random();
     private Timer timer;
-
+    final DynamicTimeSeriesCollection dataset;
     public DTSCTest(final String title, final World world) {
         //super(title);
-        final DynamicTimeSeriesCollection dataset =
-            new DynamicTimeSeriesCollection(1, COUNT, new Second());
+      //  final DynamicTimeSeriesCollection 
+    	dataset =  new DynamicTimeSeriesCollection(1, COUNT, new Second());
         dataset.setTimeBase(new Second(0, 0, 0, 1, 1, 2013));
         dataset.addSeries(gaussianData(), 0, "Population's entropy");
         JFreeChart chart = createChart(dataset);
@@ -97,7 +97,13 @@ public class DTSCTest extends JDialog {
             }
         });
     }
-
+    public void updateChart(World world)
+    {
+    	float[] newData = new float[1];
+    	newData[0] = (float)world.getPopulationComplexity();
+        dataset.advanceTime();
+        dataset.appendData(newData);
+    }
     private float randomValue() {
         return (float) (random.nextGaussian() * MINMAX / 3);
     }

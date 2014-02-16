@@ -75,8 +75,9 @@ public class Agent {
 	
 	private String exportableData;
 	private boolean mutant;
+	private int DOB; //  date of birth
 
-	public Agent(Vector2d initialPosition, int kingdom, int initialHealth,
+	public Agent(int DOB,Vector2d initialPosition,Vector2d initialVelocity, int kingdom, int initialHealth,
 			int initialEnergy, int initialSize, Color agentColor,
 			ArrayList<Passive> passivesList,
 			ArrayList<Behaviour> behavioursList, int upkeep, String DNA, String parent,int agentID, boolean isMutant) {
@@ -94,9 +95,11 @@ public class Agent {
 		this.kingdom = kingdom;
 		this.upkeep = upkeep;
 		this.DNA = DNA;
+		this.DOB = DOB;
 		partnerDNA = "";
 		
 		mutant = isMutant;
+		velocity.set(initialVelocity);
 		
 		
 	}
@@ -146,7 +149,7 @@ public class Agent {
 		}
 
 		maxSpeed = cruiseSpeed;
-		velocity.set(new Vector2d(rnd.nextFloat()- 0.5, rnd.nextFloat() - 0.5));
+		
 		// System.out.println("newborn velocity: " + velocity.length());
 
 	}
@@ -361,7 +364,8 @@ public class Agent {
 				(int) position.y - (size / 2), size, size);
 		g.drawLine((int) position.x, (int) position.y,
 				(int) (position.x - velocity.x),
-				(int) (position.y - velocity.y));
+				(int) (position.y - velocity.y));	
+		
 	}
 
 	public double limitSpeed(Vector2d vel) {
@@ -547,6 +551,14 @@ public class Agent {
 
 	public void setMutant(boolean mutant) {
 		this.mutant = mutant;
+	}
+
+	public int getDOB() {
+		return DOB;
+	}
+
+	public void setDOB(int dOB) {
+		DOB = dOB;
 	}
 
 }

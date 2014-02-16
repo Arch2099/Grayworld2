@@ -72,7 +72,7 @@ public class LifeFactory {
 	private String chromoDelimiter = "/"; // separates chromosomes inside the
 											// DNA
 	private String geneDelimiter = "-"; // separates genes inside the chromosome
-	private String intraGeneDelimiter = ","; // separates parameters inside a
+	private String intraGeneDelimiter = ":"; // separates parameters inside a
 												// gene(exons)
 
 	private int redColor;
@@ -84,8 +84,10 @@ public class LifeFactory {
 
 	private double mutationProbability = 0.04;
 	private int cellStructure; // determinate kingdom
+	private Random rnd;
 
-	public LifeFactory() {
+	public LifeFactory(Random random) {
+		rnd = random;
 	};
 
 	public Agent createAgent(Vector2d position, String chromosome1,
@@ -99,7 +101,7 @@ public class LifeFactory {
 		return agent;
 	}
 
-	public Agent createAgent(Vector2d position, String DNA,String parent) {
+	public Agent createAgent(int DOB, Vector2d position, String DNA,String parent) {
 		
 		behaviours = new ArrayList<Behaviour>();
 		redColor = 0;
@@ -126,7 +128,7 @@ public class LifeFactory {
 																			// which
 																			// contain
 																			// the
-																			// information
+																		// information
 
 		if (Integer.parseInt(exon[0]) > 50) {
 
@@ -242,14 +244,12 @@ public class LifeFactory {
 		
 
 		IDcounter++;
+		Vector2d initialVelocity = new Vector2d(rnd.nextFloat()- 0.5, rnd.nextFloat() - 0.5);
 		
-		Agent agent = new Agent(position, cellStructure, 100, 100, 2,
+		Agent agent = new Agent(DOB,position,initialVelocity, cellStructure, 100, 100, 2,
 				agentColor, passives, behaviours, upkeep, DNA,parent,IDcounter,mutant);
 		
-		if(mutant == true)
-		{
-			System.out.println(" new mutant");
-		}
+		
 		// dummy genes
 
 		return agent;
@@ -272,7 +272,7 @@ public class LifeFactory {
 
 	public Agent createTestAgent() // test
 	{
-		Random rnd = new Random();
+		//Random rnd = new Random();
 		Agent agent = new Agent(
 				new Vector2d(rnd.nextInt(255), rnd.nextInt(255)), 5);
 		return agent;
@@ -280,7 +280,7 @@ public class LifeFactory {
 
 	public AbioAgent createAtom() // test
 	{
-		Random rnd = new Random();
+		//Random rnd = new Random();
 		AbioAgent agent = new AbioAgent(new Vector2d(rnd.nextInt(455),
 				rnd.nextInt(455)));
 		return agent;
@@ -288,7 +288,7 @@ public class LifeFactory {
 
 	public AbioAgent createElectron() // test
 	{
-		Random rnd = new Random();
+		//Random rnd = new Random();
 		AbioAgent agent = new AbioAgent(new Vector2d(rnd.nextInt(455),
 				rnd.nextInt(455)), 1);
 		return agent;
@@ -318,7 +318,7 @@ public class LifeFactory {
 		// each gene is taken from one of the 2 parents with 50% probability
 		// of being inherited from 1 of the first 2 chromosome
 		for (int i = 0; i < geneList1c.length; i++) {
-			Random rnd = new Random();
+			//Random rnd = new Random();
 			if (rnd.nextDouble() > 0.5) {
 				geneList1c[i] = mutate(geneList1a[i]) + geneDelimiter;
 			} else {
@@ -334,7 +334,7 @@ public class LifeFactory {
 
 		// recombination of the second 2 chromosome
 		for (int i = 0; i < geneList2c.length; i++) {
-			Random rnd = new Random();
+			//Random rnd = new Random();
 			if (rnd.nextDouble() > 0.5) {
 				geneList2c[i] = mutate(geneList2a[i]) + geneDelimiter;
 			} else {
@@ -351,7 +351,7 @@ public class LifeFactory {
 		// recobination of the last(3rd) chromosome
 
 		for (int i = 0; i < geneList3c.length; i++) {
-			Random rnd = new Random();
+			//Random rnd = new Random();
 			if (rnd.nextDouble() > 0.5) {
 				geneList3c[i] = mutate(geneList3a[i]) + geneDelimiter;
 			} else {
@@ -369,7 +369,7 @@ public class LifeFactory {
 
 	public String mutate(String geneToMutate) {
 		
-		Random rnd = new Random();
+		//Random rnd = new Random();
 		String geneM = "";
 		String[] exonToMutate = geneToMutate.split(intraGeneDelimiter); // separate
 																		// the

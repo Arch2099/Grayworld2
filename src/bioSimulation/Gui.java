@@ -34,6 +34,7 @@ import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JRadioButtonMenuItem;
 import javax.vecmath.Vector2d;
@@ -44,7 +45,10 @@ import org.jfree.ui.RefineryUtilities;
 
 
 
+
+
 import data.AreaChartTest;
+import data.DTSCTest;
 import data.SpeciesOrganizer;
 import nonBiological.PhLab;
 import simLoop.BaseLoop;
@@ -65,12 +69,17 @@ public class Gui extends Canvas implements KeyListener, MouseMotionListener, Bas
 	private final Action action = new SwingAction();
 	private final Action action2 = new SwingAction2();
 	private final Action action3 = new SwingAction3();
+	private final Action action4 = new SwingAction4();
 	private final ButtonGroup buttonGroup_2 = new ButtonGroup();
-    private final static World world = new World();
+	private final static long seed = 878985900;
+    private final static World world = new World(seed);                 ///// // SEED HERE
     //private SpeciesOrganizer speciesOrganizer= new SpeciesOrganizer();
     AreaChartTest demo;
+    DTSCTest entropyGraph;
+    private boolean autostop = false;
+    private int stopDay;
     
-   private int counterz;
+    private int counterz;
     
     
 
@@ -128,7 +137,9 @@ public class Gui extends Canvas implements KeyListener, MouseMotionListener, Bas
 			public void actionPerformed(ActionEvent arg0) {
 				   try {
 					   pause = true;
-					world.getGenealogy().saveGenealogy();
+					   
+					String fileName = JOptionPane.showInputDialog("File Name");
+					world.getGenealogy().saveGenealogy(fileName + "Seed" + seed);
 				} catch (IOException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -159,6 +170,11 @@ public class Gui extends Canvas implements KeyListener, MouseMotionListener, Bas
 		maxRadioBut.setAction(action3);
 		mnNewMenu.add(maxRadioBut);
 		
+		JRadioButtonMenuItem ffToDate = new JRadioButtonMenuItem("Fast Forward to Date...");
+		buttonGroup_2.add(ffToDate);
+		ffToDate.setAction(action4);
+		mnNewMenu.add(ffToDate);
+		
 		JMenu mnGeganke = new JMenu("Geganke");
 		menuBar.add(mnGeganke);
 		
@@ -181,6 +197,11 @@ public class Gui extends Canvas implements KeyListener, MouseMotionListener, Bas
         RefineryUtilities.centerFrameOnScreen(demo);
         demo.setVisible(true);
         //demo.start();
+        entropyGraph = new DTSCTest("Complexity", world);
+        entropyGraph.pack();
+        RefineryUtilities.centerFrameOnScreen(demo);
+        entropyGraph.setVisible(true);
+        entropyGraph.start();
         runner.init(this,30);
         runner.begin();
         
@@ -193,13 +214,19 @@ public class Gui extends Canvas implements KeyListener, MouseMotionListener, Bas
     public void updateWorld(){
         if(!pause){
            world.updateWorld(); 
-         /*  if(counterz >30)
+           
+           if (world.getDay() > stopDay && autostop)
            {
-        	   demo.updateChart(world);
+        	   runner.setFPS(30);
+        	   autostop = false;
+           }
+           if(counterz >30)
+           {
+        	   entropyGraph.updateChart(world);
         	   counterz = 0;
            }
            else
-        	   counterz++; */
+        	   counterz++; 
             }
     
            
@@ -210,6 +237,8 @@ public class Gui extends Canvas implements KeyListener, MouseMotionListener, Bas
     
     public void renderWorld(){
         Graphics2D g = (Graphics2D)strategy.getDrawGraphics();
+        g.drawString("Day :" + world.getDay(), 20, 20);
+        g.drawString("comp"+ world.getPopulationComplexity(), 20, 40);
         g.setColor(Color.RED);
         //g.drawOval(50, 50, 3, 3);
         
@@ -243,6 +272,10 @@ public class Gui extends Canvas implements KeyListener, MouseMotionListener, Bas
 		for (Agent agent : world.getPopulation())
 		{			
 			agent.paint(g);
+			if(agent.getAgentID() == 10080)
+			{
+				g.drawString("I'm Here!", (int)agent.getPosition().x, (int)agent.getPosition().y);
+			}
 		}
 		
 		
@@ -262,6 +295,7 @@ public class Gui extends Canvas implements KeyListener, MouseMotionListener, Bas
         
         strategy.show();
         g.clearRect(0,0,WIDTH,HEIGHT);
+        
     }
     
     public void initWorld(){
@@ -347,12 +381,31 @@ public class Gui extends Canvas implements KeyListener, MouseMotionListener, Bas
 	private class SwingAction3 extends AbstractAction {
 		public SwingAction3() {
 			putValue(NAME, "MAX");
-			putValue(SHORT_DESCRIPTION, "Disable rendering and run the simulation at MAX speed");
+			putValue(SHORT_DESCRIPTION,
+					"Disable rendering and run the simulation at MAX speed");
 		}
+
 		public void actionPerformed(ActionEvent e) {
 			runner.setFPS(3000);
 		}
-		
-		
 	}
+		private class SwingAction4 extends AbstractAction {
+			public SwingAction4() {
+				putValue(NAME, "FFtoDate");
+				putValue(SHORT_DESCRIPTION,
+						"Disable rendering and run the simulation at MAX speed until date reached");
+			}
+
+			public void actionPerformed(ActionEvent e) {
+				
+				pause = true;					   
+				String stopDayS = JOptionPane.showInputDialog("Insert end of Fast Forward");
+				stopDay = Integer.parseInt(stopDayS);
+				runner.setFPS(3000);
+				autostop = true;
+				pause = false;
+			}
+
+		}
+	
 }
